@@ -55,12 +55,12 @@ services:
   redis:
     image: redis:alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672"
+      - "5673:5672"
       - "15672:15672"
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
