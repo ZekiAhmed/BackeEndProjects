@@ -18,9 +18,11 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - mongo
     environment:
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - MONGODB_URI=mongodb://mongo:27017/identitydb
 
   post-service:
     build: ./post-service
@@ -28,9 +30,11 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - mongo
     environment:
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - MONGODB_URI=mongodb://mongo:27017/postdb
 
   media-service:
     build: ./media-service
@@ -38,9 +42,11 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - mongo
     environment:
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - MONGODB_URI=mongodb://mongo:27017/mediadb
 
   search-service:
     build: ./search-service
@@ -48,9 +54,11 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - mongo
     environment:
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - MONGODB_URI=mongodb://mongo:27017/searchdb
 
   redis:
     image: redis:alpine
@@ -67,3 +75,15 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  mongo:
+    image: mongo:6
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    command: ["mongod", "--bind_ip_all"]
+
+volumes:
+  mongo-data:

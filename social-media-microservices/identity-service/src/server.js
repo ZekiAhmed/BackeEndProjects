@@ -15,10 +15,29 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 //connect to mongodb
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => logger.info("Connected to mongodb"))
-  .catch((e) => logger.error("Mongo connection error", e));
+// mongoose
+//   .connect(process.env.MONGODB_URI)
+//   .then(() => logger.info("Connected to mongodb"))
+//   .catch((e) => logger.error("Mongo connection error", e));
+
+const connectWithRetry = () => {
+  logger.info(`📡 Attempting MongoDB connection at ${process.env.MONGODB_URI}...`);
+
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+    .then(() => {
+      logger.info('✅ MongoDB connected successfully');
+    })
+    .catch(err => {
+      logger.info(`❌ MongoDB connection failed: ${err.message}`);
+      logger.info('⏳ Retrying in 5 seconds...');
+      setTimeout(connectWithRetry, 5000);
+    });
+};
+
+connectWithRetry();
 
 const redisClient = new Redis(process.env.REDIS_URL);
 
