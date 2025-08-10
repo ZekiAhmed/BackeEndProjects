@@ -33,6 +33,7 @@ Render does **not** support `docker-compose.yml` directly. You must create a sep
 
 - **MongoDB**: Use [Render's MongoDB add-on](https://render.com/docs/databases#mongodb) or [MongoDB Atlas](https://www.mongodb.com/atlas).
 - **Redis**: Use [Render's Redis add-on](https://render.com/docs/databases#redis).
+use this chatGpt page:(https://chatgpt.com/share/6899029d-ad00-800b-9e33-14a7a9732e7b).
 
 ### b. RabbitMQ
 
