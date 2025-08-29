@@ -13,6 +13,8 @@ import { Post } from './posts/entities/post.entity';
 // import { File } from './file-upload/entities/file.entity';
 // import { EventsModule } from './events/events.module';
 // import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { User } from './auth/entities/user.entity';
 
 @Module({
   imports: [
@@ -39,10 +41,11 @@ import { Post } from './posts/entities/post.entity';
       username: 'postgres',
       password: 'password',
       database: 'nest-advanced',
-      entities: [Post], //array of enities that u want to register
+      entities: [Post, User], //array of enities that u want to register
       synchronize: true, // dev mode
     }),
     PostsModule,
+    AuthModule,
     // AuthModule,
     // FileUploadModule,
     // EventsModule,
