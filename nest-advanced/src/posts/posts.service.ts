@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 // import { Post } from './interfaces/post.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { User, UserRole } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class PostsService {
@@ -29,7 +30,11 @@ export class PostsService {
     //     return this.posts;
     // }
     async findAll(): Promise<Post[]> {
-        return await this.postsRepository.find();
+        return await this.postsRepository.find({
+            relations:{
+                authorName:true
+            },
+        });
     }
 
 
@@ -44,7 +49,10 @@ export class PostsService {
     //     return singlPost;
     // }
     async findOne(id:number): Promise<Post>  {
-        const singlPost = await this.postsRepository.findOneBy({id});
+        const singlPost = await this.postsRepository.findOne({
+            where: {id},
+            relations: ['authorName']
+        });
 
         if(!singlPost) {
             throw new NotFoundException(`Post with id ${id} not found`);
@@ -64,11 +72,11 @@ export class PostsService {
     //     return newPost;
 
     // }
-    async create(createPostData: CreatePostDto): Promise<Post> {
+    async create(createPostData: CreatePostDto, authorName: User): Promise<Post> {
         const newlyCreatedPost = this.postsRepository.create({
             title: createPostData.title,
             content: createPostData.content,
-            // authorName: createPostData.authorName
+            authorName: authorName
         });
 
         
@@ -91,8 +99,12 @@ export class PostsService {
     //     this.posts[currentPostIndexEdit] = updatedPost;
     //     return updatedPost;
     // }
-    async update(id:number, updatePostData: UpdatePostDto): Promise<Post> {
+    async update(id:number, updatePostData: UpdatePostDto, user: User): Promise<Post> {
         const findPostToUpdate = await this.findOne(id);
+
+        if(findPostToUpdate.authorName.id !== user.id && user.role !== UserRole.ADMIN) {
+            throw new ForbiddenException('You are not allowed to update this post');
+        }
 
         if(updatePostData.title) {
             findPostToUpdate.title = updatePostData.title;

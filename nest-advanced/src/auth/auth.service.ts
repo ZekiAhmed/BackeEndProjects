@@ -20,7 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
     // private readonly userEventService: UserEventsService,
   ) {
-    bcrypt.hash('123456', 10).then(console.log);
+    // bcrypt.hash('123456', 10).then(console.log);
   }
 
   async register(registerDto: RegisterDto) {
