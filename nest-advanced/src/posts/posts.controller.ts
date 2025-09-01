@@ -11,6 +11,8 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/roles.decorators';
 import { RolesGuard } from 'src/auth/guards/roles-guard';
+import { FindPostsQueryDto } from './dto/find-posts-query.dto';
+import { PaginatedResponse } from 'src/common/interfaces/paginated-response.interface';
 
 @Controller('posts')
 export class PostsController {
@@ -26,9 +28,17 @@ export class PostsController {
 
     //     return extractAllPosts
     // }
+    // @Get()
+    // async findAll() : Promise<PostEntity[]> {
+    //     return await this.postService.findAll();
+    // }
+
+    //  the query is like ?page=1&limit=10&title=someTitle
     @Get()
-    async findAll() : Promise<PostEntity[]> {
-        return await this.postService.findAll();
+    async findAll(
+        @Query() query: FindPostsQueryDto,
+    ): Promise<PaginatedResponse<PostEntity>> {
+        return this.postService.findAll(query);
     }
 
     // @Get(':id')
