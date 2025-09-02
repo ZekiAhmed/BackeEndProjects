@@ -8,19 +8,22 @@ import { Post } from './posts/entities/post.entity';
 // import { User } from './auth/entities/user.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
-// import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 // import { FileUploadModule } from './file-upload/file-upload.module';
 // import { File } from './file-upload/entities/file.entity';
 // import { EventsModule } from './events/events.module';
 // import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/user.entity';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { File } from './file-upload/entities/file.entity';
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({
-    //   isGlobal: true,
-    // }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
@@ -41,13 +44,12 @@ import { User } from './auth/entities/user.entity';
       username: 'postgres',
       password: 'password',
       database: 'nest-advanced',
-      entities: [Post, User], //array of enities that u want to register
+      entities: [Post, User, File], //array of enities that u want to register
       synchronize: true, // dev mode
     }),
     PostsModule,
     AuthModule,
-    // AuthModule,
-    // FileUploadModule,
+    FileUploadModule,
     // EventsModule,
   ],
   controllers: [AppController],
