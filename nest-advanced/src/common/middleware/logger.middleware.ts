@@ -4,6 +4,8 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
+// we use middlewares before guards and interceptors
+
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');

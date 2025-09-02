@@ -12,11 +12,12 @@ import { ConfigModule } from '@nestjs/config';
 // import { FileUploadModule } from './file-upload/file-upload.module';
 // import { File } from './file-upload/entities/file.entity';
 // import { EventsModule } from './events/events.module';
-// import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/user.entity';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { File } from './file-upload/entities/file.entity';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -50,16 +51,14 @@ import { File } from './file-upload/entities/file.entity';
     PostsModule,
     AuthModule,
     FileUploadModule,
-    // EventsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-// export class AppModule implements NestModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     //apply the middleware for all the routes
-//     consumer.apply(LoggerMiddleware).forRoutes('*');
-//   }
-// }
-
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    //apply the middleware for all the routes
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

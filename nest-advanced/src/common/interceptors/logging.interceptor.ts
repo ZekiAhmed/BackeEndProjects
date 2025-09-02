@@ -8,12 +8,14 @@ import {
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+// we use interceptors after gurd but before pipe
+
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggingInterceptor.name);
 
   //context -> contains request and response objects
-  //control -> route handler exectes
+  //next -> control -> route handler executes
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
